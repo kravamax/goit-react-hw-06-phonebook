@@ -7,9 +7,21 @@ import Filter from './Filter';
 import ContactList from './ContactList';
 import Container from './Container';
 
+import store from '../redux/store';
+import action from '../redux/contacts/contacts-actions';
+
 const App = () => {
   const [contacts, setContacts] = useState([]);
   const [filter, setFilter] = useState('');
+
+  console.log('store', store);
+  console.log('getStore', store.getState());
+
+  console.log(
+    'myAction',
+    store.dispatch(action.myAction({ name: 'Alex', number: '997-333' }))
+  );
+  console.log('myAction2', store.dispatch(action.myAction2(95)));
 
   useEffect(() => {
     const storageData = localStorage.getItem('contacts');
