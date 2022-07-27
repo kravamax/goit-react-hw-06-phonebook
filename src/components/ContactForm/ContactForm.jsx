@@ -1,13 +1,15 @@
-import { nanoid } from 'nanoid';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import contactsActions from 'redux/contacts/contacts-actions';
+import { getContacts } from 'redux/contacts/contacts-selectors';
 import PropTypes from 'prop-types';
 import s from './ContactForm.module.css';
-import useLocalStorage from '../../hooks/useLocalStorage';
 
-const ContactForm = ({ contacts, onSubmit }) => {
-  const [name, setName] = useLocalStorage('name', '');
-  const [number, setNumber] = useLocalStorage('number', '');
+const ContactForm = () => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const listContactsNames = useSelector(getContacts);
 
   const handleChange = event => {
     const { value, name } = event.currentTarget;
@@ -18,22 +20,22 @@ const ContactForm = ({ contacts, onSubmit }) => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    const contact = {
-      id: nanoid(),
-      name,
-      number,
-    };
-    if (checkForExistContact(contact.name)) {
-      Notify.warning(`${name} is already in contacts`);
-    } else {
-      onSubmit(contact);
-      reset();
+
+    if (checkForExistContact(name)) {
+      alert(`${name} is already in contacts`);
+      return;
     }
+
+    dispatch(contactsActions.addContact({ name, number }));
+
+    reset();
   };
 
   const checkForExistContact = addNameContact => {
     const normalizedNameContact = addNameContact.toLowerCase();
-    return contacts.some(name => name.toLowerCase() === normalizedNameContact);
+    return listContactsNames.some(
+      ({ name }) => name.toLowerCase() === normalizedNameContact
+    );
   };
 
   const reset = () => {
@@ -78,8 +80,7 @@ const ContactForm = ({ contacts, onSubmit }) => {
 };
 
 ContactForm.propTypes = {
-  contacts: PropTypes.arrayOf(PropTypes.string.isRequired),
-  onSubmit: PropTypes.func.isRequired,
+  contactsNames: PropTypes.arrayOf(PropTypes.string.isRequired),
 };
 
 export default ContactForm;
