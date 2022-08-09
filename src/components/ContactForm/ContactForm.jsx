@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import contactsActions from 'redux/contacts/contacts-actions';
 import { getContacts } from 'redux/contacts/contacts-selectors';
 import s from './ContactForm.module.css';
+import toast from 'react-hot-toast';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
@@ -21,9 +22,11 @@ const ContactForm = () => {
     event.preventDefault();
 
     if (checkForExistContact(name)) {
-      alert(`${name} is already in contacts`);
+      toast.error(`${name} is already in contacts`);
       return;
     }
+
+    toast.success(`${name} was added.`);
 
     dispatch(contactsActions.addContact({ name, number }));
 
@@ -44,7 +47,7 @@ const ContactForm = () => {
 
   return (
     <form className={s.form} onSubmit={handleSubmit}>
-      <label className={s.label}>
+      <label className={s.labelName}>
         Name
         <input
           className={s.input}
@@ -57,7 +60,7 @@ const ContactForm = () => {
           onChange={handleChange}
         />
       </label>
-      <label className={s.label}>
+      <label className={s.labelNumber}>
         Number
         <input
           className={s.input}

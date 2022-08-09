@@ -22,6 +22,7 @@ h2 {
   font-size: 3rem;
   color: #fff;
   margin: 0;
+  line-height: 0.9;
 }
 
 h1 {
@@ -30,5 +31,9 @@ h1 {
 
 h2 {
   font-size: 2rem;
-  margin-top: 25px;
+  margin-top: 20px;
+}
+
+h4 {
+  font-weight: 500;
 }
